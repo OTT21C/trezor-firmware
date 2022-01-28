@@ -50,7 +50,7 @@ pub trait ObjComponent {
     fn obj_paint(&mut self);
 }
 
-impl<T> ObjComponent for Child<T>
+impl<T> ObjComponent for T
 where
     T: ComponentMsgObj,
 {
@@ -101,9 +101,13 @@ struct LayoutObjInner {
 impl LayoutObj {
     /// Create a new `LayoutObj`, wrapping a root component.
     pub fn new(root: impl ObjComponentTrace + 'static) -> Result<Gc<Self>, Error> {
+        // Let's wrap the root component into a `Child` to maintain the top-level
+        // invalidation logic.
+        let wrapped_root = Child::new(root);
         // SAFETY: We are coercing GC-allocated sized ptr into an unsized one.
-        let root =
-            unsafe { Gc::from_raw(Gc::into_raw(Gc::new(root)?) as *mut dyn ObjComponentTrace) };
+        let root = unsafe {
+            Gc::from_raw(Gc::into_raw(Gc::new(wrapped_root)?) as *mut dyn ObjComponentTrace)
+        };
 
         Gc::new(Self {
             base: Self::obj_type().as_base(),

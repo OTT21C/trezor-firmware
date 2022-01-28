@@ -36,7 +36,7 @@ where
 extern "C" fn ui_layout_new_example(param: Obj) -> Obj {
     let block = move || {
         let param: Buffer = param.try_into()?;
-        let layout = LayoutObj::new(Child::new(Dialog::new(
+        let layout = LayoutObj::new(Dialog::new(
             display::screen(),
             |area| {
                 Text::new::<theme::TTDefaultText>(area, param)
@@ -45,7 +45,7 @@ extern "C" fn ui_layout_new_example(param: Obj) -> Obj {
             },
             |area| Button::with_text(area, b"Left", theme::button_default()),
             |area| Button::with_text(area, b"Right", theme::button_default()),
-        )))?;
+        ))?;
         Ok(layout.into())
     };
     unsafe { util::try_or_raise(block) }

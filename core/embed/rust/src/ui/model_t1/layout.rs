@@ -61,7 +61,7 @@ extern "C" fn ui_layout_new_confirm_action(
         let right = verb
             .map(|label| |area, pos| Button::with_text(area, pos, label, theme::button_default()));
 
-        let obj = LayoutObj::new(Child::new(Dialog::new(
+        let obj = LayoutObj::new(Dialog::new(
             display::screen(),
             |area| {
                 Text::new::<theme::T1DefaultText>(area, format)
@@ -71,7 +71,7 @@ extern "C" fn ui_layout_new_confirm_action(
             left,
             right,
             Some(title),
-        )))?;
+        ))?;
         Ok(obj.into())
     };
     unsafe { util::try_with_args_and_kwargs(n_args, args, kwargs, block) }
